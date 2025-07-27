@@ -19,7 +19,8 @@
         "noFallthroughCasesInSwitch": false,
         "paths": {
             "@src/*": ["./src/*"],
-            "@configuration/*": ["./src/configuration/*"]
+            "@configuration/*": ["./src/configuration/*"],
+            "@infrastructure/*": ["./src/infrastructure/*"]
         }
     },
     "exclude": [".git", ".vscode", "node_modules", "dist", "static", "coverage"]

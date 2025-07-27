@@ -10,6 +10,7 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
         "^@src/(.*)$": "<rootDir>/$1",
-        "^@configuration/(.*)$": "<rootDir>/configuration/$1"
+        "^@configuration/(.*)$": "<rootDir>/configuration/$1",
+        "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1"
     }
 }
