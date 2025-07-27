@@ -13,7 +13,7 @@ const dataSource: DataSourceOptions = {
     username: `${environment.DATABASE_USERNAME}`,
     password: `${environment.DATABASE_PASSWORD}`,
     database: `${environment.DATABASE_NAME}`,
-    entities: ['dist/entities/**/*.entity.js'],
+	entities: ['dist/infrastructure/database/entities/**/*.entity.js'],
     migrations: ['dist/infrastructure/database/migrations/*.js'],
     synchronize: false
 };
