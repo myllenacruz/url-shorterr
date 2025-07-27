@@ -19,9 +19,27 @@ export class CreateTableUser1753649535486 implements MigrationInterface {
                         type: 'varchar'
                     },
                     {
+                        name: 'email',
+                        type: 'varchar'
+                    },
+                    {
+                        name: 'password',
+                        type: 'varchar'
+                    },
+                    {
                         name: 'createdAt',
                         type: 'timestamp with time zone',
                         default: 'now()'
+                    },
+                    {
+                        name: 'updatedAt',
+                        type: 'timestamp with time zone',
+                        default: 'now()'
+                    },
+                    {
+                        name: 'deletedAt',
+                        type: 'timestamp with time zone',
+                        isNullable: true
                     }
                 ]
             })
