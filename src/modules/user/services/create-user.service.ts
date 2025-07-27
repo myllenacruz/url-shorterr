@@ -15,8 +15,8 @@ export class CreateUserService {
      * @returns {UserEntity} The created user.
      */
     public async execute(data: CreateUserDto): Promise<UserEntity> {
-        const userExists: UserEntity | null = await this.userRepository.findByEmail(data.email);
-        if (userExists) throw new ConflictException('Email already exists');
+        const existingUser: UserEntity | null = await this.userRepository.findByEmail(data.email);
+        if (existingUser) throw new ConflictException('Email already exists');
 
         const password: string = await bcrypt.hash(data.password, environment.AUTHENCATION_SALTH);
         const user: UserEntity = await this.userRepository.create({ ...data, password });
