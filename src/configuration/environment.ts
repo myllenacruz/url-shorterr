@@ -16,4 +16,5 @@ export default {
     DATABASE_NAME: get('DATABASE_NAME').required().asString(),
     DATABASE_CONNECTION_NAME: get('DATABASE_CONNECTION_NAME').required().asString(),
     DATABASE_SYNCHRONIZE: get('DATABASE_SYNCHRONIZE').required().asBool(),
+    AUTHENCATION_SALTH: get('AUTHENCATION_SALTH').required().asInt()
 };

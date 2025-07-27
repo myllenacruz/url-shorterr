@@ -11,6 +11,7 @@
     "moduleNameMapper": {
         "^@src/(.*)$": "<rootDir>/$1",
         "^@configuration/(.*)$": "<rootDir>/configuration/$1",
-        "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1"
+        "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1",
+        "^@modules/(.*)$": "<rootDir>/modules/$1"
     }
 }

@@ -20,7 +20,8 @@
         "paths": {
             "@src/*": ["./src/*"],
             "@configuration/*": ["./src/configuration/*"],
-            "@infrastructure/*": ["./src/infrastructure/*"]
+            "@infrastructure/*": ["./src/infrastructure/*"],
+			"@modules/*": ["./src/modules/*"],
         }
     },
     "exclude": [".git", ".vscode", "node_modules", "dist", "static", "coverage"]
