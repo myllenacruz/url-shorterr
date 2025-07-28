@@ -93,3 +93,22 @@ export function UpdateUrl(): MethodDecorator {
         })
     );
 }
+
+/**
+ * Decorator to define Swagger documentation for redirecting to the original URL.
+ * @returns {MethodDecorator} Method decorator for applying Swagger metadata.
+ */
+export function RedirectTo(): MethodDecorator {
+    return applyDecorators(
+        ApiResponse({
+            status: HttpStatus.FOUND,
+            description: 'Redirects to the original URL corresponding to the provided short code.',
+        }),
+        ApiOperation({
+            summary: 'Redirect to original URL',
+            description: `
+                This endpoint receives a short code and redirects the user to the original URL.
+            `
+        })
+    );
+}

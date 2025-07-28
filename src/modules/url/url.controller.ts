@@ -6,12 +6,13 @@ import { IUserRequest } from '@src/authentication/interfaces/user-request.interf
 import { Public } from '@src/authentication/decorators/public.decorator';
 import { IUrlShortenResponse } from '@modules/url/interfaces/url-shorten-response.interface';
 import { RedirectUrlService } from '@modules/url/services/redirect-url.service';
-import { ListMyUrls, ShortenUrl, UpdateUrl } from '@modules/url/decorators/swagger-url.decorator';
+import { ListMyUrls, RedirectTo, ShortenUrl, UpdateUrl } from '@modules/url/decorators/swagger-url.decorator';
 import { UrlEntity } from '@infrastructure/database/entities/url/url.entity';
 import { ListMyUrlsService } from '@modules/url/services/list-my-urls.service';
 import { UpdateUrlDto } from '@modules/url/dtos/update-short-url.dto';
 import { UpdateUrlService } from '@modules/url/services/update-url.service';
 import { OptionalAuthenticationGuard } from '@src/authentication/guards/optional-authentication.guard';
+import { IRedirectUrlResponse } from '@modules/url/interfaces/redirect-url-response.interface';
 
 @Controller('url')
 export class UrlController {
@@ -28,7 +29,7 @@ export class UrlController {
      * @returns {IUrlShortenResponse} An object containing originalUrl and shortUrl.
      */
     @Post()
-	@Public()
+    @Public()
     @UseGuards(OptionalAuthenticationGuard)
     @ShortenUrl()
     @HttpCode(HttpStatus.CREATED)
@@ -59,17 +60,24 @@ export class UrlController {
      * @returns {UrlEntity} The updated URL entity.
      */
     @Patch(':shortCode')
-	@UpdateUrl()
+    @UpdateUrl()
     @HttpCode(HttpStatus.CREATED)
     public async update(@Param('shortCode') shortCode: string, @Body() data: UpdateUrlDto, @UserRequest() userRequest: IUserRequest): Promise<UrlEntity> {
         const updatedUrl = await this.updateUrlService.execute(shortCode, data, userRequest);
         return updatedUrl;
     }
 
+    /**
+     * Endpoint redirects to the original URL based on the provided short code.
+     * @param {string} shortCode - The short code representing the shortened URL.
+     * @decorator {@link RedirectTo} - Swagger decorator for documenting the redirect endpoint.
+     * @returns {IRedirectUrlResponse} An object with a `url` property to which the user is redirected.
+     */
     @Get(':shortCode')
     @Public()
     @Redirect()
-    public async redirectToOriginal(@Param('shortCode') shortCode: string): Promise<{ url: string }> {
+    @RedirectTo()
+    public async redirectToOriginal(@Param('shortCode') shortCode: string): Promise<IRedirectUrlResponse> {
         const originalUrl = await this.redirectUrlService.execute(shortCode);
         return { url: originalUrl };
     }
