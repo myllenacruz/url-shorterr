@@ -6,11 +6,28 @@ import { UserModule } from '@modules/user/user.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { JwtGuard } from './authentication/guards/jwt.guard';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import environment from '@configuration/environment';
 
 @Module({
-    imports: [DatabaseModule, TerminusModule, UserModule, AuthenticationModule],
+    imports: [
+        DatabaseModule,
+        TerminusModule,
+        UserModule,
+        AuthenticationModule,
+        ThrottlerModule.forRoot([
+            {
+                ttl: environment.THROTTLER_TTL,
+                limit: environment.THROTTLER_LIMIT
+            }
+        ])
+    ],
     controllers: [AppController],
     providers: [
+        {
+            provide: APP_GUARD,
+            useClass: ThrottlerGuard
+        },
         {
             provide: APP_GUARD,
             useClass: JwtGuard
