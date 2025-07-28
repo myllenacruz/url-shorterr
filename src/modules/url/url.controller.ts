@@ -77,7 +77,7 @@ export class UrlController {
     @Public()
     @Redirect()
     @RedirectTo()
-    public async redirectToOriginal(@Param('shortCode') shortCode: string): Promise<IRedirectUrlResponse> {
+    public async redirect(@Param('shortCode') shortCode: string): Promise<IRedirectUrlResponse> {
         const originalUrl = await this.redirectUrlService.execute(shortCode);
         return { url: originalUrl };
     }
