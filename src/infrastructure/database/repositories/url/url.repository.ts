@@ -20,4 +20,11 @@ export class UrlRepository {
     public async findByShortCode(shortCode: string): Promise<UrlEntity | null> {
         return this.repository.findOne({ where: { shortCode, deletedAt: null } });
     }
+
+    public async findAllByUserId(userId: string): Promise<UrlEntity[]> {
+        return this.repository.find({
+            where: { userId, deletedAt: null },
+            order: { createdAt: 'DESC' }
+        });
+    }
 }
