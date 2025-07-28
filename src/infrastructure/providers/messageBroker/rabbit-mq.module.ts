@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ERabbitMQQueues } from './enums/rabbit-mq-queue.enum';
 import { UrlAccessCounterProducer } from './producers/url-access-counter.producer';
 import { RabbitMQController } from './rabbit-mq.controller';
-import { UrlAccessCounterConsumer } from './services/url-access-counter.consumer';
+import { UrlAccessCounterConsumerService } from './services/url-access-counter.consumer';
 import { DatabaseModule } from '@infrastructure/database/database.module';
 
 @Global()
@@ -32,7 +32,7 @@ export class RabbitMQModule {
             module: RabbitMQModule,
             controllers: [RabbitMQController],
             imports: [ConfigModule.forRoot(), ClientsModule.register(clients), DatabaseModule],
-            providers: [UrlAccessCounterProducer, UrlAccessCounterConsumer],
+            providers: [UrlAccessCounterProducer, UrlAccessCounterConsumerService],
             exports: [UrlAccessCounterProducer]
         };
     }
