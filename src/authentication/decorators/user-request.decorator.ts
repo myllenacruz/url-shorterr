@@ -10,6 +10,7 @@ import { IUserRequest } from '../interfaces/user-request.interface';
  */
 export const UserRequest = createParamDecorator((_data: unknown, ctx: ExecutionContext): IUserRequest => {
     const request = ctx.switchToHttp().getRequest();
+    if (!request.user) return null;
 
     const { id, name, email } = request.user;
     request.user = { id, name, email };
