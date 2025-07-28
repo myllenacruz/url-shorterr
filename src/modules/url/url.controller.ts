@@ -22,11 +22,11 @@ export class UrlController {
     /**
      * Endpoint to short an URL.
      * @param {AuthenticationDto} data - The original url data to short.
-     * @decorator {@link Public} - Marks the endpoint as publicly accessible, bypassing authentication checks.
      * @decorator {@link ShortenUrl} - Decorator to define Swagger documentation for shorten URL.
      * @returns {IUrlShortenResponse} An object containing originalUrl and shortUrl.
      */
     @Post()
+	@Public()
     @UseGuards(OptionalAuthenticationGuard)
     @ShortenUrl()
     @HttpCode(HttpStatus.CREATED)
