@@ -2,7 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { CreateUserService } from './services/create-user.service';
 import { UserEntity } from '@infrastructure/database/entities/user/user.entity';
-import { CreateUser } from '@modules/user/dtos/swagger-user.dto';
+import { CreateUser } from '@modules/user/decorators/swagger-user.decorator';
 
 @Controller('user')
 export class UserController {
