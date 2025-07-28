@@ -1,6 +1,6 @@
 import { Controller, Logger } from '@nestjs/common';
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
-import { Channel } from 'amqplib';
+import { Channel, Message } from 'amqplib';
 import { ERabbitMQQueues } from '@infrastructure/providers/messageBroker/enums/rabbit-mq-queue.enum';
 import { UrlAccessCounterConsumerService } from './services/url-access-counter.consumer';
 import { IAccessCounterMessage } from './interfaces/access-counter-message.interface';
@@ -19,7 +19,7 @@ export class RabbitMQController {
     @MessagePattern(ERabbitMQQueues.URL_ACCESS_COUNTER)
     public async accessCounter(@Payload() data: IAccessCounterMessage, @Ctx() context: RmqContext): Promise<void> {
         const channel: Channel = context.getChannelRef();
-        const message = context.getMessage();
+        const message: Message = context.getMessage() as Message;
 
         const shortCode = data.shortCode;
         this.logger.debug(`Received message for short code: ${shortCode}`);
