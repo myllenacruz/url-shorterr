@@ -18,5 +18,7 @@ export default {
     DATABASE_SYNCHRONIZE: get('DATABASE_SYNCHRONIZE').required().asBool(),
     AUTHENCATION_SALTH: get('AUTHENCATION_SALTH').required().asInt(),
     AUTHENCATION_SECRET: get('AUTHENCATION_SECRET').required().asString(),
-    AUTHENCATION_EXPIRES: get('AUTHENCATION_EXPIRES').required().asString()
+    AUTHENCATION_EXPIRES: get('AUTHENCATION_EXPIRES').required().asString(),
+    THROTTLER_TTL: get('THROTTLER_TTL').required().asInt(),
+    THROTTLER_LIMIT: get('THROTTLER_LIMIT').required().asInt()
 };
