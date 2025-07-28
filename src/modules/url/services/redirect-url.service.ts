@@ -11,6 +11,14 @@ export class RedirectUrlService {
         private readonly urlAccessCounterProducer: UrlAccessCounterProducer
     ) {}
 
+    /**
+     * Executes the URL redirection by an shortCode.
+     * Finds the original URL associated with the given short code.
+     * Sends a message to increment the access counter.
+     * @param {string} shortCode - The unique short code representing the shortened URL.
+     * @returns {Promise<string>} - The original URL.
+     * @throws {NotFoundException} - If no URL is found for the given short code.
+     */
     public async execute(shortCode: string): Promise<string> {
         const url = await this.urlRepository.findByShortCode(shortCode);
         if (!url) throw new NotFoundException();
