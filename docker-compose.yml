@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:17.5-alpine
+    container_name: postgres-url-shortener
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq-url-shortener
+    env_file:
+      - .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-teddy}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-teddy}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: always
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: url-shortener_api
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      RABBITMQ_URL: amqp://${RABBITMQ_USERNAME:-teddy}:${RABBITMQ_PASSWORD:-teddy}@rabbitmq:5672
+    depends_on:
+      - db
+      - rabbitmq
+    restart: always
+
+volumes:
+  pgdata:
+  rabbitmq_data:
