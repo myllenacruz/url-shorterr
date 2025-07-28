@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { UrlEntity } from '@infrastructure/database/entities/url/url.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -24,4 +25,7 @@ export class UserEntity {
 
     @DeleteDateColumn()
     deletedAt?: Date;
+
+    @OneToMany(() => UrlEntity, (url) => url.user)
+    urls: UrlEntity[];
 }

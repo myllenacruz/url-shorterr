@@ -7,7 +7,8 @@ export const user: Omit<UserEntity, 'password'> = {
     email: 'teddy@mail.com',
     createdAt: new Date(),
     updatedAt: new Date(),
-    deletedAt: null
+    deletedAt: null,
+    urls: []
 };
 
 export const userEntity: UserEntity = {
