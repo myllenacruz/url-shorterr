@@ -17,7 +17,7 @@ export class RabbitMQController {
      * @returns {Promise<void>} A promise that resolves to void, indicating that the message has been processed.
      */
     @MessagePattern(ERabbitMQQueues.URL_ACCESS_COUNTER)
-    public async execute(@Payload() data: IAccessCounterMessage, @Ctx() context: RmqContext): Promise<void> {
+    public async accessCounter(@Payload() data: IAccessCounterMessage, @Ctx() context: RmqContext): Promise<void> {
         const channel: Channel = context.getChannelRef();
         const message = context.getMessage();
 
