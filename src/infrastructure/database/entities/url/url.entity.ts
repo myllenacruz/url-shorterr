@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { UserEntity } from '@infrastructure/database/entities/user/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('url')
 export class UrlEntity {
@@ -30,5 +31,6 @@ export class UrlEntity {
 
     @ManyToOne(() => UserEntity, (user) => user.urls)
     @JoinColumn({ name: 'userId' })
+    @Exclude()
     user: UserEntity;
 }

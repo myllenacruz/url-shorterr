@@ -27,4 +27,18 @@ export class UrlRepository {
             order: { createdAt: 'DESC' }
         });
     }
+
+	public async findByOriginalUrlAndUserId(originalUrl: string, userId: string): Promise<UrlEntity | null> {
+        return this.repository.findOne({
+            where: {
+                originalUrl: originalUrl,
+                userId: userId,
+                deletedAt: null
+            },
+        });
+    }
+
+	public async save(url: UrlEntity): Promise<UrlEntity> {
+        return this.repository.save(url);
+    }
 }
