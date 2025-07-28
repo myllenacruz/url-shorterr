@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { generateShortCode } from '@modules/url/utils/generate-short-code';
 import { UrlRepository } from '@infrastructure/database/repositories/url/url.repository';
 import { CreateShortenUrlDto } from '@modules/url/dtos/create-shorten-url.dto';
@@ -6,10 +6,14 @@ import { IUserRequest } from '@src/authentication/interfaces/user-request.interf
 import environment from '@configuration/environment';
 import { IUrlShortenResponse } from '@modules/url/interfaces/url-shorten-response.interface';
 import { UrlEntity } from '@infrastructure/database/entities/url/url.entity';
+import { UserRepository } from '@infrastructure/database/repositories/user/user.repository';
 
 @Injectable()
 export class ShortenUrlService {
-    constructor(private readonly urlRepository: UrlRepository) {}
+    constructor(
+        private readonly urlRepository: UrlRepository,
+        private userRepository: UserRepository
+    ) {}
     /**
      * Creates a shortened URL or returns an existing one if already registered.
      * @param {CreateShortenUrlDto} data - Data containing the original URL to be shortened.
@@ -18,6 +22,11 @@ export class ShortenUrlService {
      * @throws ConflictException - If short code cannot be generated.
      */
     public async execute(data: CreateShortenUrlDto, userRequest: IUserRequest): Promise<IUrlShortenResponse> {
+        if (userRequest?.id) {
+            const existingUser = await this.userRepository.findById(userRequest.id);
+            if (!existingUser) throw new NotFoundException();
+        }
+
         const existingShortenedUrl: UrlEntity = await this.urlRepository.findByOriginalUrl(data.url);
         if (existingShortenedUrl) {
             const shortUrl = `${environment.BASE_URL}/${existingShortenedUrl.shortCode}`;
