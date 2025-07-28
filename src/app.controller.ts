@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheck, HealthCheckResult, HealthCheckService, HealthIndicatorResult, TypeOrmHealthIndicator } from '@nestjs/terminus';
 import environment from '@configuration/environment';
+import { Public } from './authentication/decorators/public.decorator';
 
 @Controller()
 export class AppController {
@@ -12,10 +13,12 @@ export class AppController {
     /**
      * Endpoint to check the health of the Postgres connection.
      * @decorator {@link Get} - Defines HTTP Get endpoint. In this case, it maps to both "/status" and the root "/" path.
+     * @decorator {@link Public} - Marks the endpoint as publicly accessible, bypassing authentication checks.
      * @decorator {@link HealthCheck} - Marks this method as a health check handler, enabling NestJS Terminus to run health indicators.
      * @returns {HealthCheckResult} - The result of the health check.
      */
     @Get(['status', '/'])
+    @Public()
     @HealthCheck()
     public check(): Promise<HealthCheckResult> {
         return this.healthCheckService.check([
