@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpStatus, HttpCode, Get } from '@nestjs/common';
+import { Body, Controller, Post, HttpStatus, HttpCode, Get, UseGuards } from '@nestjs/common';
 import { CreateShortenUrlDto } from '@modules/url/dtos/create-shorten-url.dto';
 import { ShortenUrlService } from '@modules/url/services/shorten-url.service';
 import { UserRequest } from '@src/authentication/decorators/user-request.decorator';
@@ -8,6 +8,7 @@ import { IUrlShortenResponse } from '@modules/url/interfaces/url-shorten-respons
 import { ListMyUrls, ShortenUrl } from '@modules/url/decorators/swagger-url.decorator';
 import { UrlEntity } from '@infrastructure/database/entities/url/url.entity';
 import { ListMyUrlsService } from '@modules/url/services/list-my-urls.service';
+import { OptionalAuthenticationGuard } from '@src/authentication/guards/optional-authentication.guard';
 
 @Controller('url')
 export class UrlController {
@@ -23,7 +24,7 @@ export class UrlController {
      * @returns {IUrlShortenResponse} An object containing originalUrl and shortUrl.
      */
     @Post()
-    @Public()
+    @UseGuards(OptionalAuthenticationGuard)
     @ShortenUrl()
     @HttpCode(HttpStatus.CREATED)
     public async shorten(@Body() data: CreateShortenUrlDto, @UserRequest() userRequest: IUserRequest): Promise<IUrlShortenResponse> {
