@@ -9,6 +9,7 @@ import { JwtGuard } from './authentication/guards/jwt.guard';
 import { UrlModule } from '@modules/url/url.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import environment from '@configuration/environment';
+import { RabbitMQModule } from './infrastructure/providers/messageBroker/rabbit-mq.module';
 
 @Module({
     imports: [
@@ -22,7 +23,8 @@ import environment from '@configuration/environment';
                 ttl: environment.THROTTLER_TTL,
                 limit: environment.THROTTLER_LIMIT
             }
-        ])
+        ]),
+        RabbitMQModule.forRoot(environment.RABBITMQ_URL)
     ],
     controllers: [AppController],
     providers: [

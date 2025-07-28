@@ -22,4 +22,9 @@ export class UserRepository {
         const user = this.repository.findOne({ where: { email } });
         return user;
     }
+
+	public async findById(id: string): Promise<UserEntity | null> {
+        const user = this.repository.findOne({ where: { id } });
+        return user;
+    }
 }

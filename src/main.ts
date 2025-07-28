@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import environment from '@configuration/environment';
 import { ValidationPipe } from '@nestjs/common';
 import { documentationConfig } from '@configuration/documentation';
+import { ERabbitMQQueues } from '@infrastructure/providers/messageBroker/enums/rabbit-mq-queue.enum';
+import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -12,6 +14,26 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
     app.enableCors({ origin: '*' });
 
+    /**
+     * Configures the RabbitMQ connection for the specified queues.
+     */
+    const queues = [ERabbitMQQueues.URL_ACCESS_COUNTER];
+    for (const queue of queues) {
+        app.connectMicroservice({
+            transport: Transport.RMQ,
+            options: {
+                urls: [environment.RABBITMQ_URL],
+                queue,
+                prefetchCount: 10,
+                noAck: false,
+                queueOptions: {
+                    durable: true
+                }
+            }
+        });
+    }
+
+    await app.startAllMicroservices();
     await app.listen(environment.PORT, '0.0.0.0');
 }
 

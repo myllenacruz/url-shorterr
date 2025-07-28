@@ -41,4 +41,8 @@ export class UrlRepository {
 	public async save(url: UrlEntity): Promise<UrlEntity> {
         return this.repository.save(url);
     }
+
+    public async incrementAccessCount(id: string): Promise<void> {
+        await this.repository.increment({ id }, 'accessCount', 1);
+    }
 }

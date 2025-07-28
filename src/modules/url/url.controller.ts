@@ -1,10 +1,11 @@
-import { Body, Controller, Post, HttpStatus, HttpCode, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, HttpStatus, HttpCode, Get, Redirect, Param, Patch, UseGuards } from '@nestjs/common';
 import { CreateShortenUrlDto } from '@modules/url/dtos/create-shorten-url.dto';
 import { ShortenUrlService } from '@modules/url/services/shorten-url.service';
 import { UserRequest } from '@src/authentication/decorators/user-request.decorator';
 import { IUserRequest } from '@src/authentication/interfaces/user-request.interface';
 import { Public } from '@src/authentication/decorators/public.decorator';
 import { IUrlShortenResponse } from '@modules/url/interfaces/url-shorten-response.interface';
+import { RedirectUrlService } from '@modules/url/services/redirect-url.service';
 import { ListMyUrls, ShortenUrl, UpdateUrl } from '@modules/url/decorators/swagger-url.decorator';
 import { UrlEntity } from '@infrastructure/database/entities/url/url.entity';
 import { ListMyUrlsService } from '@modules/url/services/list-my-urls.service';
@@ -17,7 +18,8 @@ export class UrlController {
     constructor(
         private readonly shortenUrlService: ShortenUrlService,
         private readonly listMyUrlsService: ListMyUrlsService,
-        private readonly updateUrlService: UpdateUrlService
+        private readonly updateUrlService: UpdateUrlService,
+        private readonly redirectUrlService: RedirectUrlService
     ) {}
     /**
      * Endpoint to short an URL.
@@ -62,5 +64,13 @@ export class UrlController {
     public async update(@Param('shortCode') shortCode: string, @Body() data: UpdateUrlDto, @UserRequest() userRequest: IUserRequest): Promise<UrlEntity> {
         const updatedUrl = await this.updateUrlService.execute(shortCode, data, userRequest);
         return updatedUrl;
+    }
+
+    @Get(':shortCode')
+    @Public()
+    @Redirect()
+    public async redirectToOriginal(@Param('shortCode') shortCode: string): Promise<{ url: string }> {
+        const originalUrl = await this.redirectUrlService.execute(shortCode);
+        return { url: originalUrl };
     }
 }
