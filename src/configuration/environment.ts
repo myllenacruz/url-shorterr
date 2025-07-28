@@ -20,5 +20,7 @@ export default {
     AUTHENCATION_SECRET: get('AUTHENCATION_SECRET').required().asString(),
     AUTHENCATION_EXPIRES: get('AUTHENCATION_EXPIRES').required().asString(),
     THROTTLER_TTL: get('THROTTLER_TTL').required().asInt(),
-    THROTTLER_LIMIT: get('THROTTLER_LIMIT').required().asInt()
+    THROTTLER_LIMIT: get('THROTTLER_LIMIT').required().asInt(),
+    BASE_URL: get('BASE_URL').required().asString(),
+    SHORT_CODE_LENGTH: get('SHORT_CODE_LENGTH').required().asInt()
 };
