@@ -9,7 +9,7 @@ import environment from '@configuration/environment';
 
 describe('ShortenUrlService', () => {
     let service: ShortenUrlService;
-    let urlRepository: jest.Mocked<UrlRepository>;
+    let urlRepository: UrlRepository;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -70,9 +70,8 @@ describe('ShortenUrlService', () => {
         it('should throw ConflictException if short code already exists', async () => {
             const generatedShortCode = 'abc123';
             jest.spyOn(shortCodeUtil, 'generateShortCode').mockReturnValue(generatedShortCode);
-
-            urlRepository.findByOriginalUrl.mockResolvedValueOnce(null);
-            urlRepository.findByShortCode.mockResolvedValueOnce(urlEntity);
+            jest.spyOn(urlRepository, 'findByOriginalUrl').mockResolvedValueOnce(null);
+            jest.spyOn(urlRepository, 'findByShortCode').mockResolvedValueOnce(urlEntity);
 
             await expect(service.execute(createShortenUrlDto, userRequest)).rejects.toThrow(ConflictException);
 
