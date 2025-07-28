@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { UrlAccessCounterProducer } from '@src/infrastructure/providers/messageBroker/producers/url-access-counter.producer';
-import { UrlRepository } from 'src/infrastructure/database/repositories/url/url.repository';
+import { UrlRepository } from '@infrastructure/database/repositories/url/url.repository';
 
 @Injectable()
 export class RedirectUrlService {

@@ -12,7 +12,7 @@ import { UserRepository } from '@infrastructure/database/repositories/user/user.
 export class ShortenUrlService {
     constructor(
         private readonly urlRepository: UrlRepository,
-        private userRepository: UserRepository
+        private readonly userRepository: UserRepository
     ) {}
     /**
      * Creates a shortened URL or returns an existing one if already registered.

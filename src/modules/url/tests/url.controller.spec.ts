@@ -5,6 +5,8 @@ import { createShortenUrlDto, shortenUrlResponse, updateUrlDto, urlEntity } from
 import { userRequest } from '@src/authentication/tests/mocks/user-request.mock';
 import { ListMyUrlsService } from '@modules/url/services/list-my-urls.service';
 import { UpdateUrlService } from '@modules/url/services/update-url.service';
+import { UserRepository } from '@infrastructure/database/repositories/user/user.repository';
+import { RedirectUrlService } from '@modules/url/services/redirect-url.service';
 
 describe('UrlController', () => {
     let controller: UrlController;
@@ -29,10 +31,20 @@ describe('UrlController', () => {
                     })
                 },
                 {
+                    provide: RedirectUrlService,
+                    useFactory: () => ({
+                        execute: jest.fn().mockResolvedValueOnce({ url: '' })
+                    })
+                },
+                {
                     provide: UpdateUrlService,
                     useFactory: () => ({
                         execute: jest.fn().mockResolvedValueOnce(urlEntity)
                     })
+                },
+                {
+                    provide: UserRepository,
+                    useValue: {}
                 }
             ]
         }).compile();

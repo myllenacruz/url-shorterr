@@ -1,15 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ShortenUrlService } from '@modules/url/services/shorten-url.service';
 import { UrlRepository } from '@infrastructure/database/repositories/url/url.repository';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { createShortenUrlDto, urlEntity } from './mocks/url.mock';
 import { userRequest } from '@src/authentication/tests/mocks/user-request.mock';
 import * as shortCodeUtil from '@modules/url/utils/generate-short-code';
 import environment from '@configuration/environment';
+import { UserRepository } from '@infrastructure/database/repositories/user/user.repository';
+import { userEntity } from '@modules/user/tests/mocks/user.mock';
 
 describe('ShortenUrlService', () => {
     let service: ShortenUrlService;
     let urlRepository: UrlRepository;
+    let userRepository: UserRepository;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -22,12 +25,19 @@ describe('ShortenUrlService', () => {
                         findByShortCode: jest.fn(),
                         create: jest.fn()
                     }
+                },
+                {
+                    provide: UserRepository,
+                    useFactory: () => ({
+                        findById: jest.fn().mockResolvedValue(userEntity)
+                    })
                 }
             ]
         }).compile();
 
         service = module.get<ShortenUrlService>(ShortenUrlService);
-        urlRepository = module.get(UrlRepository);
+        urlRepository = module.get<UrlRepository>(UrlRepository);
+        userRepository = module.get<UserRepository>(UserRepository);
     });
 
     it('should be defined', () => {
@@ -35,6 +45,14 @@ describe('ShortenUrlService', () => {
     });
 
     describe('execute', () => {
+        it('should throw NotFoundException if logged user does not exist', async () => {
+            jest.spyOn(userRepository, 'findById').mockResolvedValueOnce(null);
+            jest.spyOn(urlRepository, 'findByOriginalUrl').mockResolvedValueOnce(null);
+
+            await expect(service.execute(createShortenUrlDto, userRequest)).rejects.toThrow(NotFoundException);
+            expect(userRepository.findById).toHaveBeenCalledWith(userRequest.id);
+        });
+
         it('should return existing shortened URL if original URL already exists', async () => {
             jest.spyOn(urlRepository, 'findByOriginalUrl').mockResolvedValueOnce(urlEntity);
             const result = await service.execute(createShortenUrlDto, userRequest);
