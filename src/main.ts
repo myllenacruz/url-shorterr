@@ -35,7 +35,6 @@ async function bootstrap() {
         });
     }
 
-    console.log('');
     await app.startAllMicroservices();
     await app.listen(environment.PORT, '0.0.0.0');
 }
