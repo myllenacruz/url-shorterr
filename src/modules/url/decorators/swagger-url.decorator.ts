@@ -1,5 +1,5 @@
 import { HttpStatus, applyDecorators } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { shortenUrlResponse, urlEntityWithoutUser } from '@modules/url/tests/mocks/url.mock';
 
 /**
@@ -123,6 +123,37 @@ export function RedirectTo(): MethodDecorator {
             description: `
                 This endpoint receives a short code and redirects the user to the original URL.
             `
+        })
+    );
+}
+
+/**
+ * Decorator to define Swagger documentation for delete URL.
+ * @returns {MethodDecorator} Method decorator for applying Swagger metadata.
+ */
+export function DeleteUrl(): MethodDecorator {
+    return applyDecorators(
+        ApiBearerAuth(),
+        ApiParam({
+            name: 'shortCode',
+            type: String,
+            required: true,
+            description: 'Identifier of the URL to be deleted'
+        }),
+        ApiOperation({
+            summary: 'Delete a shortened URL',
+            description: `
+                Deletes a shortened URL based on the provided short code.
+                Only the owner of the URL can perform this action.
+            `
+        }),
+        ApiResponse({
+            status: HttpStatus.NO_CONTENT,
+            description: 'URL successfully deleted'
+        }),
+        ApiResponse({
+            status: HttpStatus.NOT_FOUND,
+            description: 'URL not found or does not belong to the authenticated user'
         })
     );
 }

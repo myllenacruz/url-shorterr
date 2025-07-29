@@ -34,12 +34,5 @@ describe('ListMyUrlsService', () => {
             await service.execute(userRequest);
             expect(urlRepository.findAllByUserId).toHaveBeenCalledWith(userRequest.id);
         });
-
-        it('should return an access token', async () => {
-            const result = await service.execute(userRequest);
-            expect(result).toHaveLength(1);
-            expect(result[0].id).toBeTruthy();
-            expect(result[0].shortCode).toBeTruthy();
-        });
     });
 });

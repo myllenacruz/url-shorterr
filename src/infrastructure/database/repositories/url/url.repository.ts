@@ -21,6 +21,10 @@ export class UrlRepository {
         return this.repository.findOne({ where: { shortCode, deletedAt: null } });
     }
 
+    public async findByShortCodeAndUserId(shortCode: string, userId: string): Promise<UrlEntity | null> {
+        return this.repository.findOne({ where: { shortCode, userId, deletedAt: null } });
+    }
+
     public async findAllByUserId(userId: string): Promise<UrlEntity[]> {
         return this.repository.find({
             where: { userId, deletedAt: null },
@@ -44,5 +48,9 @@ export class UrlRepository {
 
     public async incrementAccessCount(id: string): Promise<void> {
         await this.repository.increment({ id }, 'accessCount', 1);
+    }
+
+	public async softDelete(id: string): Promise<void> {
+        await this.repository.softDelete({ id });
     }
 }

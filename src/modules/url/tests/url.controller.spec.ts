@@ -7,12 +7,14 @@ import { ListMyUrlsService } from '@modules/url/services/list-my-urls.service';
 import { UpdateUrlService } from '@modules/url/services/update-url.service';
 import { UserRepository } from '@infrastructure/database/repositories/user/user.repository';
 import { RedirectUrlService } from '@modules/url/services/redirect-url.service';
+import { DeleteUrlService } from '@modules/url/services/delete-url.service';
 
 describe('UrlController', () => {
     let controller: UrlController;
     let shortenUrlService: ShortenUrlService;
     let listMyUrlsService: ListMyUrlsService;
     let updateUrlService: UpdateUrlService;
+    let deleteUrlService: DeleteUrlService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -43,6 +45,12 @@ describe('UrlController', () => {
                     })
                 },
                 {
+                    provide: DeleteUrlService,
+                    useFactory: () => ({
+                        execute: jest.fn()
+                    })
+                },
+                {
                     provide: UserRepository,
                     useValue: {}
                 }
@@ -53,6 +61,7 @@ describe('UrlController', () => {
         shortenUrlService = module.get<ShortenUrlService>(ShortenUrlService);
         listMyUrlsService = module.get<ListMyUrlsService>(ListMyUrlsService);
         updateUrlService = module.get<UpdateUrlService>(UpdateUrlService);
+        deleteUrlService = module.get<DeleteUrlService>(DeleteUrlService);
     });
 
     it('should be defined', () => {
@@ -99,6 +108,19 @@ describe('UrlController', () => {
             const result = await controller.update(urlEntity.shortCode, updateUrlDto, userRequest);
             expect(result.id).toBeDefined();
             expect(result.originalUrl).toBeDefined();
+        });
+    });
+
+    describe('delete', () => {
+        it('should call deleteUrlService.execute', async () => {
+            const deleteUrlServiceSpy = jest.spyOn(deleteUrlService, 'execute');
+            await controller.delete(urlEntity.shortCode, userRequest);
+            expect(deleteUrlServiceSpy).toHaveBeenCalledWith(urlEntity.shortCode, userRequest);
+        });
+
+        it('should resolve with void when deleting a URL successfully', async () => {
+            const result = await controller.delete(urlEntity.shortCode, userRequest);
+            expect(result).toBeUndefined();
         });
     });
 });

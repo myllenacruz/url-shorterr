@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpStatus, HttpCode, Get, Redirect, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, HttpStatus, HttpCode, Get, Redirect, Param, Patch, UseGuards, Delete } from '@nestjs/common';
 import { CreateShortenUrlDto } from '@modules/url/dtos/create-shorten-url.dto';
 import { ShortenUrlService } from '@modules/url/services/shorten-url.service';
 import { UserRequest } from '@src/authentication/decorators/user-request.decorator';
@@ -6,13 +6,14 @@ import { IUserRequest } from '@src/authentication/interfaces/user-request.interf
 import { Public } from '@src/authentication/decorators/public.decorator';
 import { IUrlShortenResponse } from '@modules/url/interfaces/url-shorten-response.interface';
 import { RedirectUrlService } from '@modules/url/services/redirect-url.service';
-import { ListMyUrls, RedirectTo, ShortenUrl, UpdateUrl } from '@modules/url/decorators/swagger-url.decorator';
+import { DeleteUrl, ListMyUrls, RedirectTo, ShortenUrl, UpdateUrl } from '@modules/url/decorators/swagger-url.decorator';
 import { UrlEntity } from '@infrastructure/database/entities/url/url.entity';
 import { ListMyUrlsService } from '@modules/url/services/list-my-urls.service';
 import { UpdateUrlDto } from '@modules/url/dtos/update-short-url.dto';
 import { UpdateUrlService } from '@modules/url/services/update-url.service';
 import { OptionalAuthenticationGuard } from '@src/authentication/guards/optional-authentication.guard';
 import { IRedirectUrlResponse } from '@modules/url/interfaces/redirect-url-response.interface';
+import { DeleteUrlService } from '@modules/url/services/delete-url.service';
 
 @Controller('url')
 export class UrlController {
@@ -20,7 +21,8 @@ export class UrlController {
         private readonly shortenUrlService: ShortenUrlService,
         private readonly listMyUrlsService: ListMyUrlsService,
         private readonly updateUrlService: UpdateUrlService,
-        private readonly redirectUrlService: RedirectUrlService
+        private readonly redirectUrlService: RedirectUrlService,
+        private readonly deleteUrlService: DeleteUrlService
     ) {}
     /**
      * Endpoint to short an URL.
@@ -80,5 +82,19 @@ export class UrlController {
     public async redirect(@Param('shortCode') shortCode: string): Promise<IRedirectUrlResponse> {
         const originalUrl = await this.redirectUrlService.execute(shortCode);
         return { url: originalUrl };
+    }
+
+    /**
+     * Endpoint to delete a shortened URL by its short code.
+     * @param {string} shortCode - The short code representing the URL to be deleted.
+     * @param {IUserRequest} userRequest - The authenticated user making the request.
+     * @decorator {@link DeleteUrl} - Swagger decorator for documenting the delete endpoint.
+     * @returns {Promise<void>} Resolves with no content upon successful deletion.
+     */
+    @Delete(':shortCode')
+    @DeleteUrl()
+    @HttpCode(HttpStatus.NO_CONTENT)
+    public async delete(@Param('shortCode') shortCode: string, @UserRequest() userRequest: IUserRequest): Promise<void> {
+        await this.deleteUrlService.execute(shortCode, userRequest);
     }
 }
