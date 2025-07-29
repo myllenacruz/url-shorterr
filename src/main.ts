@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { documentationConfig } from '@configuration/documentation';
 import { ERabbitMQQueues } from '@infrastructure/providers/messageBroker/enums/rabbit-mq-queue.enum';
 import { Transport } from '@nestjs/microservices';
+import { AllExceptionsFilter } from './shared/exceptions/all-exceptions-filter';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -12,6 +13,7 @@ async function bootstrap() {
     documentationConfig(app);
 
     app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalFilters(new AllExceptionsFilter());
     app.enableCors({ origin: '*' });
 
     /**
