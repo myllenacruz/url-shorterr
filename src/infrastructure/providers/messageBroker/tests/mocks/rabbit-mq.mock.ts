@@ -12,5 +12,6 @@ export const accessCounterMessage: IAccessCounterMessage = {
 };
 
 export class LoggerMock extends Logger {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error(message: string, trace: string) {}
 }

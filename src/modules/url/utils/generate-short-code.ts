@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import environment from 'src/configuration/environment';
 
 /**
  * Generates a unique short code based on a UUID.

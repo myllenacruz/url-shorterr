@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UserEntity } from '@infrastructure/database/entities/user/user.entity';
 import { UserRepository } from '@infrastructure/database/repositories/user/user.repository';
 import { CreateUserDto } from '@modules/user/dtos/create-user.dto';

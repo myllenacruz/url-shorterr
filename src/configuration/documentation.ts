@@ -8,16 +8,14 @@ import { INestApplication } from '@nestjs/common';
  */
 export function documentationConfig(app: INestApplication): void {
     const documentBuilder = new DocumentBuilder()
-        .addBearerAuth(
-            {
-                type: 'http',
-                scheme: 'bearer',
-                bearerFormat: 'JWT',
-                name: 'jwt',
-                description: 'Enter JWT Token',
-                in: 'header'
-            }
-        )
+        .addBearerAuth({
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            name: 'jwt',
+            description: 'Enter JWT Token',
+            in: 'header'
+        })
         .setTitle('URL Shorter')
         .build();
 

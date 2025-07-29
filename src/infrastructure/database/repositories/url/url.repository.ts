@@ -32,17 +32,17 @@ export class UrlRepository {
         });
     }
 
-	public async findByOriginalUrlAndUserId(originalUrl: string, userId: string): Promise<UrlEntity | null> {
+    public async findByOriginalUrlAndUserId(originalUrl: string, userId: string): Promise<UrlEntity | null> {
         return this.repository.findOne({
             where: {
                 originalUrl: originalUrl,
                 userId: userId,
                 deletedAt: null
-            },
+            }
         });
     }
 
-	public async save(url: UrlEntity): Promise<UrlEntity> {
+    public async save(url: UrlEntity): Promise<UrlEntity> {
         return this.repository.save(url);
     }
 
@@ -50,7 +50,7 @@ export class UrlRepository {
         await this.repository.increment({ id }, 'accessCount', 1);
     }
 
-	public async softDelete(id: string): Promise<void> {
+    public async softDelete(id: string): Promise<void> {
         await this.repository.softDelete({ id });
     }
 }

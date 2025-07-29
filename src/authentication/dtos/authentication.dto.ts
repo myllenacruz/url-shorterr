@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { userEntity } from "@src/modules/user/tests/mocks/user.mock";
+import { userEntity } from '@src/modules/user/tests/mocks/user.mock';
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
 export class AuthenticationDto {

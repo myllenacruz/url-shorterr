@@ -74,7 +74,7 @@ describe('AuthenticationService', () => {
             expect(jwtServiceSignSpy).toHaveBeenCalledWith(
                 expect.objectContaining({
                     sub: userEntity.id,
-					name: userEntity.name,
+                    name: userEntity.name,
                     email: authenticationDto.email
                 }),
                 expect.objectContaining({

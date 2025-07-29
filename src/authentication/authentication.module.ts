@@ -5,11 +5,11 @@ import environment from '@configuration/environment';
 import { AuthenticationStrategy } from './strategies/authentication.strategy';
 import { AuthenticationService } from './services/authentication.service';
 import { AuthenticationController } from './authentication.controller';
-import { DatabaseModule } from "@src/infrastructure/database/database.module";
+import { DatabaseModule } from '@src/infrastructure/database/database.module';
 
 @Module({
     imports: [
-		DatabaseModule,
+        DatabaseModule,
         PassportModule,
         JwtModule.register({
             secret: environment.AUTHENCATION_SECRET,

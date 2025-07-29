@@ -16,6 +16,7 @@ export class OptionalAuthenticationGuard extends AuthGuard('jwt') {
      * @param {ExecutionContext} context - Execution context of the request.
      * @returns {any} The user object if successfully authenticated, or null otherwise.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public handleRequest<TUser = unknown>(err: unknown, user: TUser | null, info: unknown, context: ExecutionContext): TUser | null {
         if (err || !user) return null;
         return user;

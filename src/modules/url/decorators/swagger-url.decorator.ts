@@ -81,7 +81,7 @@ export function UpdateUrl(): MethodDecorator {
                 Updates the original destination URL associated with a short code.
                 Only the owner of the URL can perform this operation.
                 The new URL must be unique for the user.
-            `,
+            `
         }),
         ApiResponse({
             status: HttpStatus.OK,
@@ -90,19 +90,19 @@ export function UpdateUrl(): MethodDecorator {
                 'application/json': {
                     examples: {
                         success: {
-                            value: { ...urlEntityWithoutUser },
-                        },
-                    },
-                },
-            },
+                            value: { ...urlEntityWithoutUser }
+                        }
+                    }
+                }
+            }
         }),
         ApiResponse({
             status: HttpStatus.NOT_FOUND,
-            description: 'No shortened URL found with the provided short code for the user.',
+            description: 'No shortened URL found with the provided short code for the user.'
         }),
         ApiResponse({
             status: HttpStatus.CONFLICT,
-            description: 'A different shortened URL with the same destination already exists for the user.',
+            description: 'A different shortened URL with the same destination already exists for the user.'
         })
     );
 }

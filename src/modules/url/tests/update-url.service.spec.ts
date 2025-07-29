@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UpdateUrlService } from '@modules/url/services/update-url.service';
 import { UrlRepository } from '@infrastructure/database/repositories/url/url.repository';
-import { NotFoundException, ForbiddenException, ConflictException } from '@nestjs/common';
+import { NotFoundException, ConflictException } from '@nestjs/common';
 import { updateUrlDto, urlEntity } from './mocks/url.mock';
 import { userRequest } from '@src/authentication/tests/mocks/user-request.mock';
 

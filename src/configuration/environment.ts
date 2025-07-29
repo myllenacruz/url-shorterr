@@ -24,6 +24,6 @@ export default {
     BASE_URL: get('BASE_URL').required().asString(),
     SHORT_CODE_LENGTH: get('SHORT_CODE_LENGTH').required().asInt(),
     RABBITMQ_URL: get('RABBITMQ_URL').required().asString(),
-	RABBITMQ_USERNAME: get('RABBITMQ_USERNAME').required().asString(),
-	RABBITMQ_PASSWORD: get('RABBITMQ_PASSWORD').required().asString()
+    RABBITMQ_USERNAME: get('RABBITMQ_USERNAME').required().asString(),
+    RABBITMQ_PASSWORD: get('RABBITMQ_PASSWORD').required().asString()
 };

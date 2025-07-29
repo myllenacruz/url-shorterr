@@ -12,7 +12,7 @@ export const urlEntityWithoutUser: Omit<UrlEntity, 'user'> = {
     userId: userEntity.id,
     createdAt: new Date(),
     updatedAt: new Date(),
-	deletedAt: null
+    deletedAt: null
 };
 
 export const urlEntity: UrlEntity = {

@@ -23,7 +23,7 @@ export class UserRepository {
         return user;
     }
 
-	public async findById(id: string): Promise<UserEntity | null> {
+    public async findById(id: string): Promise<UserEntity | null> {
         const user = this.repository.findOne({ where: { id } });
         return user;
     }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { UrlRepository } from '@infrastructure/database/repositories/url/url.repository';
 import { IUserRequest } from '@src/authentication/interfaces/user-request.interface';
 import { UrlEntity } from '@infrastructure/database/entities/url/url.entity';
