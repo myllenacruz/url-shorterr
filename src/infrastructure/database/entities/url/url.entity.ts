@@ -27,7 +27,7 @@ export class UrlEntity {
     updatedAt: Date;
 
 	@DeleteDateColumn({ type: 'timestamp', nullable: true })
-    deletedAt?: Date;
+    deletedAt: Date;
 
     @ManyToOne(() => UserEntity, (user) => user.urls)
     @JoinColumn({ name: 'userId' })
