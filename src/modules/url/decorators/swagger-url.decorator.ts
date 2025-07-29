@@ -53,7 +53,7 @@ export function ListMyUrls(): MethodDecorator {
             content: {
                 'application/json': {
                     examples: {
-                        data: { value: { ...urlEntityWithoutUser } }
+                        data: { value: [urlEntityWithoutUser] }
                     }
                 }
             },
