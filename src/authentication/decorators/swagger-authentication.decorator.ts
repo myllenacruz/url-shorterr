@@ -7,22 +7,31 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
  */
 export function Authentication(): MethodDecorator {
     return applyDecorators(
+        ApiOperation({
+            summary: 'Authenticate user',
+            description: `
+                Authenticates a user using email and password.
+                If the credentials are valid, returns a JWT access token which can be used in subsequent requests for authorization.
+				The token is signed and contains the user ID (sub), name, and email.
+            `
+        }),
         ApiResponse({
+            status: HttpStatus.CREATED,
+            description: 'Authentication successful. Returns a valid JWT access token.',
             content: {
                 'application/json': {
                     examples: {
-                        data: { value: { acessToken: 'myAcessToken' } }
+                        success: {
+                            summary: 'Successful authentication',
+                            value: { accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }
+                        }
                     }
                 }
-            },
-            status: HttpStatus.CREATED
+            }
         }),
-        ApiOperation({
-            summary: 'authentication',
-            description: `
-						This endpoint is used to authentication.
-						It accepts email and password in the request body and returns the access token.
-					`
+        ApiResponse({
+            status: HttpStatus.UNAUTHORIZED,
+            description: 'Authentication failed. Invalid email or password.'
         })
     );
 }
