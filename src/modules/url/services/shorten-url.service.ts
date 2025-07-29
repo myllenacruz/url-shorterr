@@ -18,8 +18,8 @@ export class ShortenUrlService {
      * Creates a shortened URL or returns an existing one if already registered.
      * @param {CreateShortenUrlDto} data - Data containing the original URL to be shortened.
      * @param {IUserRequest} userRequest - Authenticated user's request information.
+     * @throws {ConflictException} - If short code cannot be generated.
      * @returns The original URL and the corresponding shortened URL.
-     * @throws ConflictException - If short code cannot be generated.
      */
     public async execute(data: CreateShortenUrlDto, userRequest: IUserRequest): Promise<IUrlShortenResponse> {
         if (userRequest?.id) {
