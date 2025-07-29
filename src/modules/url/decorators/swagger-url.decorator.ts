@@ -9,22 +9,35 @@ import { shortenUrlResponse, urlEntityWithoutUser } from '@modules/url/tests/moc
 export function ShortenUrl(): MethodDecorator {
     return applyDecorators(
         ApiBearerAuth(),
+        ApiOperation({
+            summary: 'Create a shortened URL',
+            description: `
+                This endpoint creates a shortened URL from the provided original URL.
+                If the URL already exists, it returns the existing short URL.
+                Otherwise, it generates a new short code and stores the shortened URL.
+            `
+        }),
         ApiResponse({
+            status: HttpStatus.CREATED,
+            description: 'Shortened URL successfully created',
             content: {
                 'application/json': {
                     examples: {
-                        data: { value: { ...shortenUrlResponse } }
+                        success: {
+                            summary: 'Successful Response',
+                            value: { ...shortenUrlResponse }
+                        }
                     }
                 }
-            },
-            status: HttpStatus.CREATED
+            }
         }),
-        ApiOperation({
-            summary: 'Create shorten URL',
-            description: `
-				This endpoint is used to create a short URL.
-				It accepts data in the request body and returns the original and short URL.
-			`
+        ApiResponse({
+            status: HttpStatus.CONFLICT,
+            description: 'The client should try the request again, with a different URL or after some time.'
+        }),
+        ApiResponse({
+            status: HttpStatus.NOT_FOUND,
+            description: 'The authenticated user does not exist in the system. Ensure the user exists and try again.'
         })
     );
 }
@@ -100,9 +113,10 @@ export function UpdateUrl(): MethodDecorator {
  */
 export function RedirectTo(): MethodDecorator {
     return applyDecorators(
+        ApiBearerAuth(),
         ApiResponse({
             status: HttpStatus.FOUND,
-            description: 'Redirects to the original URL corresponding to the provided short code.',
+            description: 'Redirects to the original URL corresponding to the provided short code.'
         }),
         ApiOperation({
             summary: 'Redirect to original URL',
