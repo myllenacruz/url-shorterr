@@ -32,10 +32,20 @@ jobs:
         env:
           NODE_ENV: test
           PORT: 3000
+          BASE_URL: http://localhost
+          SHORT_CODE_LENGTH: 6
           DATABASE_HOST: localhost
           DATABASE_PORT: 5432
           DATABASE_USERNAME: postgres
           DATABASE_PASSWORD: root
-          DATABASE_NAME: short-url-test-db
-          AUTHENCATION_SECRET: supersecretkeyforjwt
-          RABBITMQ_URL: amqp://localhost
+          DATABASE_NAME: url-shortner
+          DATABASE_CONNECTION_NAME: default
+          DATABASE_SYNCHRONIZE: 'true'
+          RABBITMQ_URL: amqp://guest:guest@localhost:5672
+          RABBITMQ_USERNAME: teddy
+          RABBITMQ_PASSWORD: teddy
+          AUTHENCATION_SALTH: 10
+          AUTHENCATION_SECRET: "2562b7d7d7a24dd9d9020d93b5dfc90f521a57e6e9a8be1dd187859b5112f8af"
+          AUTHENCATION_EXPIRES: 1d
+          THROTTER_TTL: 60000
+          THROTTER_LIMIT: 10
