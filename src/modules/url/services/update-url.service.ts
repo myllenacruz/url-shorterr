@@ -18,14 +18,11 @@ export class UpdateUrlService {
      * @param {IUserRequest} userRequest The user making the request (used to verify ownership).
      * @returns {UrlEntity} The updated url entity data.
      * @throws {NotFoundException} If no URL is found for the given short code.
-     * @throws {ForbiddenException} If the user is not the owner of the URL (including public URLs).
      * @throws {ConflictException} If the new URL is already used by another active URL owned by the same user.
      */
     public async execute(shortCode: string, data: UpdateUrlDto, userRequest: IUserRequest): Promise<UrlEntity> {
-        const url = await this.urlRepository.findByShortCode(shortCode);
+        const url = await this.urlRepository.findByShortCodeAndUserId(shortCode, userRequest.id);
         if (!url) throw new NotFoundException();
-
-        if (!url.userId || url.userId !== userRequest.id) throw new ForbiddenException();
 
         const existingUrl = await this.urlRepository.findByOriginalUrlAndUserId(data.url, userRequest.id);
         if (existingUrl && existingUrl.id !== url.id) throw new ConflictException();

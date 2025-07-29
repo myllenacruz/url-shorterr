@@ -16,7 +16,7 @@ describe('UpdateUrlService', () => {
                 {
                     provide: UrlRepository,
                     useValue: {
-                        findByShortCode: jest.fn(),
+                        findByShortCodeAndUserId: jest.fn(),
                         findByOriginalUrlAndUserId: jest.fn(),
                         save: jest.fn()
                     }
@@ -34,43 +34,27 @@ describe('UpdateUrlService', () => {
 
     describe('execute', () => {
         it('should update and return URL if user is the owner and no conflict exists', async () => {
-            const updatedUrl = { ...urlEntity, originalUrl: updateUrlDto.url };
+            jest.spyOn(urlRepository, 'findByShortCodeAndUserId').mockResolvedValue(urlEntity);
+            jest.spyOn(urlRepository, 'findByOriginalUrlAndUserId').mockResolvedValue(null);
 
-            jest.spyOn(urlRepository, 'findByShortCode').mockResolvedValueOnce({ ...urlEntity, userId: userRequest.id });
-            jest.spyOn(urlRepository, 'findByOriginalUrlAndUserId').mockResolvedValueOnce(null);
-            jest.spyOn(urlRepository, 'save').mockResolvedValueOnce(updatedUrl);
+            const saveSpy = jest.spyOn(urlRepository, 'save').mockResolvedValue({ ...urlEntity, originalUrl: updateUrlDto.url });
+            const result = await service.execute(urlEntity.shortCode, updateUrlDto, userRequest);
 
-            const shortCode = 'abf5d7';
-            const result = await service.execute(shortCode, updateUrlDto, userRequest);
-            expect(result.originalUrl).toBe(updateUrlDto.url);
-            expect(urlRepository.findByShortCode).toHaveBeenCalledWith(shortCode);
-            expect(urlRepository.findByOriginalUrlAndUserId).toHaveBeenCalledWith(updateUrlDto.url, userRequest.id);
-            expect(urlRepository.save).toHaveBeenCalledWith(expect.objectContaining({ originalUrl: updateUrlDto.url }));
+            expect(result).toEqual({ ...urlEntity, originalUrl: updateUrlDto.url });
+            expect(saveSpy).toHaveBeenCalledWith({ ...urlEntity, originalUrl: updateUrlDto.url });
         });
 
         it('should throw NotFoundException if URL does not exist', async () => {
-			const shortCode = 'abf5d7';
-            jest.spyOn(urlRepository, 'findByShortCode').mockResolvedValueOnce(null);
+            const shortCode = 'abf5d7';
+            jest.spyOn(urlRepository, 'findByShortCodeAndUserId').mockResolvedValueOnce(null);
             await expect(service.execute(shortCode, updateUrlDto, userRequest)).rejects.toThrow(NotFoundException);
         });
 
-        it('should throw ForbiddenException if URL has no userId (public)', async () => {
-			const shortCode = 'abf5d7';
-            jest.spyOn(urlRepository, 'findByShortCode').mockResolvedValueOnce({ ...urlEntity, userId: null });
-            await expect(service.execute(shortCode, updateUrlDto, userRequest)).rejects.toThrow(ForbiddenException);
-        });
-
-        it('should throw ForbiddenException if URL belongs to a different user', async () => {
-			const shortCode = 'abf5d7';
-            jest.spyOn(urlRepository, 'findByShortCode').mockResolvedValueOnce({ ...urlEntity, userId: 'another-user-id' });
-            await expect(service.execute(shortCode, updateUrlDto, userRequest)).rejects.toThrow(ForbiddenException);
-        });
-
         it('should throw ConflictException if another URL with the same new original URL exists for the user', async () => {
-			const shortCode = 'abf5d7';
+            const shortCode = 'abf5d7';
             const existingDifferentUrl = { ...urlEntity, id: 'different-id', originalUrl: updateUrlDto.url };
 
-            jest.spyOn(urlRepository, 'findByShortCode').mockResolvedValueOnce({ ...urlEntity, userId: userRequest.id });
+            jest.spyOn(urlRepository, 'findByShortCodeAndUserId').mockResolvedValueOnce({ ...urlEntity, userId: userRequest.id });
             jest.spyOn(urlRepository, 'findByOriginalUrlAndUserId').mockResolvedValueOnce(existingDifferentUrl);
             await expect(service.execute(shortCode, updateUrlDto, userRequest)).rejects.toThrow(ConflictException);
         });

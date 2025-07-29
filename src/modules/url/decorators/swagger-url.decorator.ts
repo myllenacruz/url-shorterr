@@ -75,34 +75,34 @@ export function ListMyUrls(): MethodDecorator {
 export function UpdateUrl(): MethodDecorator {
     return applyDecorators(
         ApiBearerAuth(),
-        ApiResponse({
-            status: HttpStatus.OK,
-            content: {
-                'application/json': {
-                    examples: {
-                        data: { value: { ...urlEntityWithoutUser } }
-                    }
-                }
-            }
-        }),
-        ApiResponse({
-            status: HttpStatus.NOT_FOUND,
-            description: 'Short code not found.'
-        }),
-        ApiResponse({
-            status: HttpStatus.FORBIDDEN,
-            description: 'User does not have permission to update this URL.'
-        }),
-        ApiResponse({
-            status: HttpStatus.CONFLICT,
-            description: 'Another URL with the same destination already exists for this user.'
-        }),
         ApiOperation({
             summary: 'Update a shortened URL',
             description: `
-                This endpoint allows a user to update the original URL associated with a short code.
+                Updates the original destination URL associated with a short code.
                 Only the owner of the URL can perform this operation.
-            `
+                The new URL must be unique for the user.
+            `,
+        }),
+        ApiResponse({
+            status: HttpStatus.OK,
+            description: 'URL successfully updated.',
+            content: {
+                'application/json': {
+                    examples: {
+                        success: {
+                            value: { ...urlEntityWithoutUser },
+                        },
+                    },
+                },
+            },
+        }),
+        ApiResponse({
+            status: HttpStatus.NOT_FOUND,
+            description: 'No shortened URL found with the provided short code for the user.',
+        }),
+        ApiResponse({
+            status: HttpStatus.CONFLICT,
+            description: 'A different shortened URL with the same destination already exists for the user.',
         })
     );
 }
