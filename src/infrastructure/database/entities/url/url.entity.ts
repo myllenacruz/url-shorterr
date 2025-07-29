@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index, JoinColumn, ManyToOne, DeleteDateColumn } from 'typeorm';
 import { UserEntity } from '@infrastructure/database/entities/user/user.entity';
 import { Exclude } from 'class-transformer';
 
@@ -26,7 +26,7 @@ export class UrlEntity {
     @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
 
-    @Column({ type: 'timestamp', nullable: true })
+	@DeleteDateColumn({ type: 'timestamp', nullable: true })
     deletedAt?: Date;
 
     @ManyToOne(() => UserEntity, (user) => user.urls)
