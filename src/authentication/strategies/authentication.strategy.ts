@@ -6,14 +6,12 @@ import { IJwtPayload } from '../interfaces/jwt-payload.interface';
 import { IJwt } from '../interfaces/jwt.interface';
 
 /**
- * Strategy that uses JWT token provided by Auth0 for authentication.
  * Extracts the token from the Authorization Header and validates it.
  */
 @Injectable()
 export class AuthenticationStrategy extends PassportStrategy(Strategy, 'jwt') {
     /**
-     * Instance of the AuthenticationStrategy using Passport.
-     * It sets up the necessary options for Auth0 JWT verification.
+     * It sets up the necessary options for JWT verification.
      * @constructor
      */
     constructor() {
